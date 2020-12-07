@@ -125,6 +125,37 @@ if(isset($_POST['addnew'])) {
     header('Location: students.php');
 }
 
+if(isset($_POST['decline'])){
+    $id = $_POST['decline'];
+
+    try{
+        $stmt = $conn->prepare("UPDATE space SET status_id=1 WHERE id=:id");
+        $stmt->execute(['id'=>$id]);
+
+        $_SESSION['success'] = 'Record approved successfully';
+    }
+    catch(PDOException $e){
+        $_SESSION['error'] = $e->getMessage();
+    }
+    header('Location: lessor.php');
+
+}
+
+if(isset($_POST['approve'])){
+    $id = $_POST['approve'];
+
+    try{
+        $stmt = $conn->prepare("UPDATE space SET status_id=2 WHERE id=:id");
+        $stmt->execute(['id'=>$id]);
+
+        $_SESSION['success'] = 'Record declined successfully';
+    }
+    catch(PDOException $e){
+        $_SESSION['error'] = $e->getMessage();
+    }
+    header('Location: lessor.php');
+
+}
 
 if(isset($_POST['id_delete'])){
     $id = $_POST['id_delete'];

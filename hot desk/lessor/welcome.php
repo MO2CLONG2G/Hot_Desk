@@ -52,30 +52,36 @@ if($_SESSION['user'] == 'admin'){
         <?php
         $conn = $pdo->open();
 
-        $stmt = $conn->prepare("SELECT * FROM lessor ");
+        $stmt = $conn->prepare("SELECT * FROM space,status WHERE space.status_id=status.status_id");
         $stmt->execute();
 
         if($stmt->rowCount() > 0) {
             echo '
                                     <table class="table" id="orderTable">
-                                        <tr style="background: orange;">
-                                            <th>Hot Desk</th>
-                                            <th>Boardroom</th>
-                                            <th>Meeting room</th>
-                                            <th>Events area</th>
+                                         <tr style="background: orange;">
+                                            <th>No #</th>
+                                            <th>Type</th>
                                             <th>Location</th>
                                             <th>Rental Date (from)</th>
                                             <th>Rental Date (to)</th>
+                                            <th>Status</th>
                                         </tr>
                                         ';
             foreach ($stmt as $key=> $row) {
 
-
+                echo '<tr>
+                                <td>' . $key . '</td>
+                                <td>' . $row['type'] . '</td>
+                                 <td>' . $row['address'] . '</td>
+                                   <td>' . $row['from'] . '</td>
+                                    <td>' . $row['to'] . '</td>
+                                    <td>' . $row['name'] . '</td>   
+                                </tr>';
             }
             echo ' </table>';
             $pdo->close();
         }else{
-            echo '<tr>No Users Found ...</tr>' ;
+            echo '<tr>No Records Found ...</tr>' ;
         }
         ?>
     </div>

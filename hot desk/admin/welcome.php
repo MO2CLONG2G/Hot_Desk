@@ -29,32 +29,39 @@ if($_SESSION['user'] == 'lessor'){
                         <?php
                         $conn = $pdo->open();
 
-                        $stmt = $conn->prepare("SELECT * FROM admin ");
+                        $stmt = $conn->prepare("SELECT * FROM space WHERE status_id=0 ");
                         $stmt->execute();
 
                         if($stmt->rowCount() > 0) {
                             echo '
                                     <table class="table" id="orderTable">
-                                        <tr>
-                                            <th>No#</th>
-                                            <th>First Nane</th>
-                                            <th>Last Name</th>
-                                            <th>Email</th>
+                                         <tr style="background: cornflowerblue;">
+                                            <th>No #</th>
+                                            <th>Type</th>
+                                            <th>Location</th>
+                                            <th>Rental Date (from)</th>
+                                            <th>Rental Date (to)</th>
+                                            <th>Action</th>
                                         </tr>
                                         ';
                             foreach ($stmt as $key=> $row) {
 
                                 echo '<tr>
                                 <td>' . $key . '</td>
-                                <td>' . $row['first_name'] . '</td>
-                                 <td>' . $row['last_name'] . '</td>
-                                   <td>' . $row['email'] . '</td>
+                                <td>' . $row['type'] . '</td>
+                                 <td>' . $row['address'] . '</td>
+                                   <td>' . $row['from'] . '</td>
+                                    <td>' . $row['to'] . '</td>
+                                   
+                                    <td><button class="btn-success approve" id="'.$row['id'].'"><i class="fa fa-check-circle-o"></i> Approve</button>
+                                         <button class="btn-danger decline" id="'.$row['id'].'"><i class="fa fa-trash-o"></i> Decline</button>
+                                     </td>
                                 </tr>';
                             }
                             echo ' </table>';
                             $pdo->close();
                         }else{
-                            echo '<tr>No Users Found ...</tr>' ;
+                            echo '<tr>No Records Found ...</tr>' ;
                         }
                         ?>
 
@@ -62,21 +69,22 @@ if($_SESSION['user'] == 'lessor'){
  
  </body> 
  </html>
-    <script src="./../assets/js/main.js"></script>
-<?php include ('./../admin/files/students_modal.php')?>
+<?php include('./../includes/scripts.php') ?>
 
 <script>
     $(function() {
 
-        $(document).on('click', '.courses', function (e) {
+        $(document).on('click', '.approve', function (e) {
 
             e.preventDefault();
-            $('#courses').modal('show');
+            var id = this.id;
+            approve(id);
         });
-        $(document).on('click', '.announcements', function (e) {
+        $(document).on('click', '.decline', function (e) {
 
             e.preventDefault();
-            $('#announcements').modal('show');
+            var id = this.id;
+            decline(id);
         });
         $(document).on('click', '.materials', function (e) {
 
@@ -110,5 +118,29 @@ if($_SESSION['user'] == 'lessor'){
         });
     });
 
+    function approve(id){
+        $.ajax({
+            type: 'POST',
+            url: './../admin/admin_handle.php',
+            data: {approve:id},
+            dataType: 'json',
+            success: function(response){
 
+
+            }
+        });
+    }
+
+    function decline(id){
+
+        $.ajax({
+            type: 'POST',
+            url: './../admin/admin_handle.php',
+            data: {decline:id},
+            dataType: 'json',
+            success: function(response){
+
+            }
+        });
+    }
 </script>

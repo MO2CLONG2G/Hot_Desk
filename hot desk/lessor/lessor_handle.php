@@ -109,9 +109,9 @@ if(isset($_POST['lease'])) {
     }
 
     try{
-        $stmt = $conn->prepare("INSERT INTO space(address, image,type,size,salary,lessor_id) VALUES(:address, :image, :type,:size,:salary,:lessor_id)");
+        $stmt = $conn->prepare("INSERT INTO space(address, image,type,size,salary,lessor_id,status) VALUES(:address, :image, :type,:size,:salary,:lessor_id,:status)");
         $stmt->execute(['address' => $address, 'image' => $image, 'type' =>
-            $type, 'size' => $size, 'salary' => $salary,'lessor_id'=>$_SESSION['admin']]);
+            $type, 'size' => $size, 'salary' => $salary,'lessor_id'=>$_SESSION['admin'],'status'=>0]);
         $_SESSION['success'] = 'Space updated successfully';
     }
     catch(PDOException $e){
